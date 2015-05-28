@@ -1,7 +1,25 @@
 'use strict';
 
 angular.module('app').directive('bubbles', [function() {
-    var computeNodes = function(data) {
+    var colorFromString = function(str) {
+        str = str || '';
+
+        var i, hash;
+        i = hash = 0;
+        while (i < str.length) {
+            hash = str.charCodeAt(i++) + ((hash << 5) - hash);
+        }
+
+        var colour = '#';
+        for (i = 0; i < 3; ++i) {
+            var part = (hash >> i * 8) & 0xFF;
+            part = Math.max(Math.min(part, 200), 50);
+            colour += ('00' + part.toString(16)).slice(-2);
+        }
+        return colour;
+    };
+
+    var computeNodes = function(data, clusterBy) {
         var nodes = _.map(data, function(d) {
             return {
                 id : d,
