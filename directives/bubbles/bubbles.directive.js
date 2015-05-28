@@ -60,10 +60,10 @@ angular.module('app').directive('bubbles', [function() {
             var svg = angular.element(element).find('div.d3');
 
             var padding = {
-                top : 100,
-                right : 100,
-                bottom : 100,
-                left : 100
+                top : 0,
+                right : 50,
+                bottom : 0,
+                left : 50
             };
             var width = svg.width();
             var height = svg.height();
@@ -132,17 +132,46 @@ angular.module('app').directive('bubbles', [function() {
                                     d3.select(this).classed('hover', false);
                                });
 
+                bubbles.exit().remove();
+
+                bubbles.attr('fill', d3.f('fill'))
+                       .attr('stroke', function(d) {
+                            return d3.rgb(d.fill).darker(1.5);
+                       }).each(function(d) {
+                            $(this).attr('original-title', d.name + ' - ' + d.cluster);
+                            $(this).tipsy({
+                                gravity : $.fn.tipsy.autoNS,
+                                title : function() { return $(this).attr('original-title'); }
+                            });
+                       });
+
                 force.nodes(nodes).size([width, height]);
                 // Enable and start the force layout
                 force.gravity(-0.01).charge(charge).friction(0.9).on('tick', function(e) {
                     bubbles.each(function(d) {
-                        d.x = d.x + (clusterCenters[d.cluster].x - d.x) * e.alpha * (0.3);
-                        d.y = d.y + (clusterCenters[d.cluster].y - d.y) * e.alpha * (0.3);
+                        var clusterCenter = clusterCenters[d.cluster] || { x : 0 , y : 0 };
+                        d.x = d.x + (clusterCenter.x - d.x) * e.alpha * (0.3);
+                        d.y = d.y + (clusterCenter.y - d.y) * e.alpha * (0.3);
                     }).attr('cx', d3.f('x'))
                       .attr('cy', d3.f('y'));
                 });
                 force.start();
             };
+
+            // Switches
+            $scope.switches = [
+                '2008',
+                '2015'
+            ];
+
+            $scope.activateSwitch = function(theSwitch) {
+                if ($scope.switches.indexOf(theSwitch) >= 0) {
+                    $scope.activeSwitch = theSwitch;
+                    refresh();
+                }
+            };
+
+            $scope.activateSwitch($scope.switches[0]);
 
             $scope.$watch(function() { return $scope.data.length; }, function() {
                 if ($scope.data.length > 0) {

@@ -12,7 +12,7 @@ app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
         var csvHeader = _.invert(_.first(csvArray.splice(0, 1)));
 
         for (var i = 0; i < csvArray.length; ++i) {
-            var title = csvArray[i][csvHeader.Titre];
+            var title = csvArray[i][csvHeader.Titre].trim();
             var year = csvArray[i][csvHeader['Année']];
             var group = csvArray[i][csvHeader.Groupe].trim();
             if (data[title] == null) {
