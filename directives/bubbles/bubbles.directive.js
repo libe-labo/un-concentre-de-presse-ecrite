@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('app').directive('bubbles', [function() {
+    // Utility function which convert whatever string in an hexadecimal color code
     var colorFromString = function(str) {
         str = str || '';
 
@@ -50,7 +51,7 @@ angular.module('app').directive('bubbles', [function() {
         return nodes;
     };
 
-    var getClusterCenter = function(data, clusterBy, width, height, oldClusters) {
+    var getClusterCenter = function(data, clusterBy, width, height) {
         var clusters = _(data).map(d3.f('cluster')).groupBy().map(function(d, k) {
             var item = {
                 name : k,
@@ -99,7 +100,6 @@ angular.module('app').directive('bubbles', [function() {
                      .attr('height', height)
                      .translate([padding.left, padding.top]);
 
-
             var force = d3.layout.force();
             var charge = function(d) {
                 return -Math.pow(d.r, 2.0) / 3;
@@ -113,32 +113,35 @@ angular.module('app').directive('bubbles', [function() {
             // Refresh function
             var refresh = function() {
                 nodes = computeNodes($scope.data, clusterBy, nodes);
-
-                clusterCenters = getClusterCenter(nodes, clusterBy, width, height, clusterCenters);
+                clusterCenters = getClusterCenter(nodes, clusterBy, width, height);
 
                 var bubbles = svg.selectAll('circle.bubble')
                                  .data(nodes, d3.f('id'));
 
-                // Create bubbles
+                // Create new bubbles
                 bubbles.enter().append('circle')
                                .attr('class', 'bubble')
                                .attr('r', d3.f('r'))
                                .attr('id', d3.f('name'))
-                               .attr('x', function(d) { return clusterCenters[d.cluster].x; })
-                               .attr('y', function(d) { return clusterCenters[d.cluster].y; })
+                               .attr('x', 0)
+                               .attr('y', 0)
                                .on('mouseenter', function() {
                                     d3.select(this).classed('hover', true);
                                })
                                .on('mouseleave', function() {
                                     d3.select(this).classed('hover', false);
-                               });
+                               }).call(force.drag);
 
+                // Remove old bubbles
                 bubbles.exit().remove();
 
+                // Update existing bubbles
                 bubbles.attr('fill', d3.f('fill'))
+                       .attr('opacity', function(d) { return d.fadedOut ? 0.2 : 1; })
                        .attr('stroke', function(d) {
                             return d3.rgb(d.fill).darker(1.5);
                        }).each(function(d) {
+                            // We're using Tipsy to show tooltips on mouseover
                             $(this).attr('original-title', d.name + ' - ' + d.cluster);
                             $(this).tipsy({
                                 gravity : $.fn.tipsy.autoNS,

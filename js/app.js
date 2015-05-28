@@ -13,12 +13,14 @@ app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
 
         for (var i = 0; i < csvArray.length; ++i) {
             var title = csvArray[i][csvHeader.Titre].trim();
-            var year = csvArray[i][csvHeader['Année']];
+            var year = csvArray[i][csvHeader['Année']].trim();
             var group = csvArray[i][csvHeader.Groupe].trim();
+            var type = csvArray[i][csvHeader.Type].trim();
             if (data[title] == null) {
                 data[title] = {
                     id : i,
-                    name : title
+                    name : title,
+                    type : type
                 };
             }
             data[title][year] = group;
