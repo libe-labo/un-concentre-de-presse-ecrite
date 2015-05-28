@@ -19,31 +19,50 @@ angular.module('app').directive('bubbles', [function() {
         return colour;
     };
 
-    var computeNodes = function(data, clusterBy) {
-        var nodes = _.map(data, function(d) {
-            return {
-                id : d.id,
-                name : d.name,
-                r : 12,
-                x : 0,
-                y : 0,
-                fill : colorFromString(clusterBy(d)),
-                cluster : clusterBy(d)
-            };
-        });
+    var computeNodes = function(data, clusterBy, oldNodes) {
+        var nodes;
+
+        nodes = _(data).map(function(d) {
+            if (clusterBy(d) != null) {
+                return {
+                    id : d.id,
+                    name : d.name,
+                    r : 12,
+                    x : 0,
+                    y : 0,
+                    fill : colorFromString(clusterBy(d)),
+                    cluster : clusterBy(d)
+                };
+            }
+            return undefined;
+        }).reject(_.isUndefined).value();
+
+        if (oldNodes != null && oldNodes.length > 0) {
+            oldNodes = _.indexBy(oldNodes, 'name');
+            _.each(nodes, function(node) {
+                if (oldNodes[node.name] != null) {
+                    node.x = oldNodes[node.name].x;
+                    node.y = oldNodes[node.name].y;
+                }
+            });
+        }
 
         return nodes;
     };
 
-    var getClusterCenter = function(data, clusterBy, width, height) {
+    var getClusterCenter = function(data, clusterBy, width, height, oldClusters) {
         var clusters = _(data).map(d3.f('cluster')).groupBy().map(function(d, k) {
-            return {
+            var item = {
                 name : k,
                 value : d.length
             };
+
+            return item;
         }).value();
 
-        var map = d3.layout.pack().size([width, height]);
+        var map = d3.layout.pack().size([width, height]).sort(function(a, b) {
+            return d3.descending(a.value, b.value);
+        });
         map.nodes({ children : clusters });
         clusters = _.indexBy(clusters, 'name');
 
@@ -86,45 +105,27 @@ angular.module('app').directive('bubbles', [function() {
                 return -Math.pow(d.r, 2.0) / 3;
             };
 
-            // Switches
-            $scope.switches = [
-                '2008',
-                '2015'
-            ];
-
-            $scope.activateSwitch = function(theSwitch) {
-                if ($scope.switches.indexOf(theSwitch) >= 0) {
-                    $scope.activeSwitch = theSwitch;
-                }
+            var clusterCenters, nodes;
+            var clusterBy = function(d) {
+                return d[$scope.activeSwitch];
             };
-
-            $scope.activateSwitch($scope.switches[0]);
 
             // Refresh function
             var refresh = function() {
-                var clusterBy = function(d) {
-                    return d[$scope.activeSwitch];
-                };
-                var nodes = computeNodes($scope.data, clusterBy);
+                nodes = computeNodes($scope.data, clusterBy, nodes);
 
-                var clusterCenters = getClusterCenter(nodes, clusterBy, width, height);
-                _.each(nodes, function(d) {
-                    d.x = clusterCenters[d.cluster].x;
-                    d.y = clusterCenters[d.cluster].y;
-                });
-
+                clusterCenters = getClusterCenter(nodes, clusterBy, width, height, clusterCenters);
 
                 var bubbles = svg.selectAll('circle.bubble')
                                  .data(nodes, d3.f('id'));
+
                 // Create bubbles
                 bubbles.enter().append('circle')
                                .attr('class', 'bubble')
                                .attr('r', d3.f('r'))
-                               .attr('fill', d3.f('fill'))
-                               .attr('stroke', function(d) {
-                                    return d3.rgb(d.fill).darker(1.5);
-                               })
                                .attr('id', d3.f('name'))
+                               .attr('x', function(d) { return clusterCenters[d.cluster].x; })
+                               .attr('y', function(d) { return clusterCenters[d.cluster].y; })
                                .on('mouseenter', function() {
                                     d3.select(this).classed('hover', true);
                                })
