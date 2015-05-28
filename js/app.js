@@ -3,6 +3,8 @@
 var app = angular.module('app', ['lheader']);
 
 app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
+    $scope.data = [];
+
     $http.get('data/data.csv').then(function(response) {
         var data = {};
 
@@ -12,9 +14,10 @@ app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
         for (var i = 0; i < csvArray.length; ++i) {
             var title = csvArray[i][csvHeader.Titre];
             var year = csvArray[i][csvHeader['Année']];
-            var group = csvArray[i][csvHeader.Groupe];
+            var group = csvArray[i][csvHeader.Groupe].trim();
             if (data[title] == null) {
                 data[title] = {
+                    id : i,
                     name : title
                 };
             }
