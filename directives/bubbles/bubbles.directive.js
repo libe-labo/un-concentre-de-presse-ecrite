@@ -36,10 +36,18 @@ angular.module('app').directive('bubbles', [function() {
     };
 
     var getClusterCenter = function(data, clusterBy, width, height) {
-        return [
-            { x : width / 3, y : height / 2 },
-            { x : (width / 3) * 2, y : height / 2 },
-        ];
+        var clusters = _(data).map(d3.f('cluster')).groupBy().map(function(d, k) {
+            return {
+                name : k,
+                value : d.length
+            };
+        }).value();
+
+        var map = d3.layout.pack().size([width, height]);
+        map.nodes({ children : clusters });
+        clusters = _.indexBy(clusters, 'name');
+
+        return clusters;
     };
 
     return {
