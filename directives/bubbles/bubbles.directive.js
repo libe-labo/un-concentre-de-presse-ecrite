@@ -28,11 +28,12 @@ angular.module('app').directive('bubbles', [function() {
                 return {
                     id : d.id,
                     name : d.name,
-                    r : 12,
+                    r : Math.round((Math.random() * 10) + 10), // Tmp
                     x : 0,
                     y : 0,
                     fill : colorFromString(clusterBy(d)),
-                    cluster : clusterBy(d)
+                    cluster : clusterBy(d),
+                    fadedOut : parseInt(Math.round(Math.random())) // Fake / Tmp
                 };
             }
             return undefined;
@@ -55,7 +56,7 @@ angular.module('app').directive('bubbles', [function() {
         var clusters = _(data).map(d3.f('cluster')).groupBy().map(function(d, k) {
             var item = {
                 name : k,
-                value : d.length
+                value : d.length / 4
             };
 
             return item;
@@ -149,13 +150,17 @@ angular.module('app').directive('bubbles', [function() {
                             });
                        });
 
-                force.nodes(nodes).size([width, height]);
                 // Enable and start the force layout
-                force.gravity(-0.01).charge(charge).friction(0.9).on('tick', function(e) {
+                force.nodes(nodes).size([width, height]);
+                force.gravity(-0.01).charge(charge).friction(0.7).on('tick', function(e) {
                     bubbles.each(function(d) {
+                        // Get attracted by the cluster's center
                         var clusterCenter = clusterCenters[d.cluster] || { x : 0 , y : 0 };
                         d.x = d.x + (clusterCenter.x - d.x) * e.alpha * (0.3);
                         d.y = d.y + (clusterCenter.y - d.y) * e.alpha * (0.3);
+                        // Make sure everything is still inside the viewport
+                        d.x = Math.max(d.r * 2, Math.min(d.x, width - d.r * 2));
+                        d.y = Math.max(d.r * 2, Math.min(d.y, height - d.r * 2));
                     }).attr('cx', d3.f('x'))
                       .attr('cy', d3.f('y'));
                 });
