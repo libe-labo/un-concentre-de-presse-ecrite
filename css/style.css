@@ -23,16 +23,13 @@ section.content {
 
 div.d3 {
     width: 100%;
-    height: 500px;
+    height: 1000px;
 }
 
 svg circle.bubble {
-    fill: cyan;
-    stroke-width: 1px;
-    stroke: darkblue;
+    stroke-width: 2px;
     cursor: pointer;
 }
 
 svg circle.bubble.hover {
-    fill: darkblue;
 }

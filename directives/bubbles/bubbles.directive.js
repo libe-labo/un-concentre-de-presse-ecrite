@@ -32,10 +32,10 @@ angular.module('app').directive('bubbles', [function() {
             var svg = angular.element(element).find('div.d3');
 
             var padding = {
-                top : 0,
-                right : 0,
-                bottom : 0,
-                left : 0
+                top : 100,
+                right : 100,
+                bottom : 100,
+                left : 100
             };
             var width = svg.width();
             var height = svg.height();
