@@ -22,11 +22,13 @@ angular.module('app').directive('bubbles', [function() {
     var computeNodes = function(data, clusterBy) {
         var nodes = _.map(data, function(d) {
             return {
-                id : d,
-                r : 10,
+                id : d.id,
+                name : d.name,
+                r : 12,
                 x : 0,
                 y : 0,
-                cluster : Math.round(Math.random())
+                fill : colorFromString(clusterBy(d)),
+                cluster : clusterBy(d)
             };
         });
 
@@ -71,48 +73,15 @@ angular.module('app').directive('bubbles', [function() {
                      .translate([padding.left, padding.top]);
 
 
-            $scope.data = _.range(30);
-            var nodes = computeNodes($scope.data);
-
-            var clusterCenters = getClusterCenter(nodes, '', width, height);
-            _.each(nodes, function(d) {
-                d.x = clusterCenters[d.cluster].x;
-                d.y = clusterCenters[d.cluster].y;
-            });
-
-
-            var bubbles = svg.selectAll('circle.bubble')
-                             .data(nodes, d3.f('id'));
-            // Create bubbles
-            bubbles.enter().append('circle')
-                           .attr('class', 'bubble')
-                           .attr('r', d3.f('r'))
-                           .on('mouseenter', function() {
-                                d3.select(this).classed('hover', true);
-                           })
-                           .on('mouseleave', function() {
-                                d3.select(this).classed('hover', false);
-                           });
-
-
-            var force = d3.layout.force().nodes(nodes).size([width, height]);
+            var force = d3.layout.force();
             var charge = function(d) {
                 return -Math.pow(d.r, 2.0) / 3;
             };
-            // Enable and start the force layout
-            force.gravity(-0.01).charge(charge).friction(0.9).on('tick', function(e) {
-                bubbles.each(function(d) {
-                    d.x = d.x + (clusterCenters[d.cluster].x - d.x) * e.alpha * (0.3);
-                    d.y = d.y + (clusterCenters[d.cluster].y - d.y) * e.alpha * (0.3);
-                }).attr('cx', d3.f('x'))
-                  .attr('cy', d3.f('y'));
-            });
-            force.start();
 
             // Switches
             $scope.switches = [
-                2008,
-                2015
+                '2008',
+                '2015'
             ];
 
             $scope.activateSwitch = function(theSwitch) {
@@ -122,6 +91,56 @@ angular.module('app').directive('bubbles', [function() {
             };
 
             $scope.activateSwitch($scope.switches[0]);
+
+            // Refresh function
+            var refresh = function() {
+                var clusterBy = function(d) {
+                    return d[$scope.activeSwitch];
+                };
+                var nodes = computeNodes($scope.data, clusterBy);
+
+                var clusterCenters = getClusterCenter(nodes, clusterBy, width, height);
+                _.each(nodes, function(d) {
+                    d.x = clusterCenters[d.cluster].x;
+                    d.y = clusterCenters[d.cluster].y;
+                });
+
+
+                var bubbles = svg.selectAll('circle.bubble')
+                                 .data(nodes, d3.f('id'));
+                // Create bubbles
+                bubbles.enter().append('circle')
+                               .attr('class', 'bubble')
+                               .attr('r', d3.f('r'))
+                               .attr('fill', d3.f('fill'))
+                               .attr('stroke', function(d) {
+                                    return d3.rgb(d.fill).darker(1.5);
+                               })
+                               .attr('id', d3.f('name'))
+                               .on('mouseenter', function() {
+                                    d3.select(this).classed('hover', true);
+                               })
+                               .on('mouseleave', function() {
+                                    d3.select(this).classed('hover', false);
+                               });
+
+                force.nodes(nodes).size([width, height]);
+                // Enable and start the force layout
+                force.gravity(-0.01).charge(charge).friction(0.9).on('tick', function(e) {
+                    bubbles.each(function(d) {
+                        d.x = d.x + (clusterCenters[d.cluster].x - d.x) * e.alpha * (0.3);
+                        d.y = d.y + (clusterCenters[d.cluster].y - d.y) * e.alpha * (0.3);
+                    }).attr('cx', d3.f('x'))
+                      .attr('cy', d3.f('y'));
+                });
+                force.start();
+            };
+
+            $scope.$watch(function() { return $scope.data.length; }, function() {
+                if ($scope.data.length > 0) {
+                    refresh();
+                }
+            }, true);
         }
     };
 }]);
