@@ -30,10 +30,7 @@
   "globals": {
     "angular": true,
     // Other libs
-    "CSV": true,
-    "hljs": true,
     "_": true,
-    "d3": true,
-    "CSVToArray": true
+    "d3": true
   }
 }

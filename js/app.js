@@ -84,35 +84,27 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
     };
 
     $http.get('data/data.csv').then(function(response) {
-        var data = {};
+        allData = _(d3.csv.parse(response.data, function(d, i) {
+            var out = {
+                id : i,
+                name : d.Titre.trim(),
+                type : d.Type.trim(),
+                r : +d['Hiérarchie'],
+                step : +d.Etape,
+            };
+            out[d['Année']] = d.Groupe;
+            return out;
+        })).groupBy('name').map(function(d) {
+            return _.merge(d[0], d[1], function(a, b, k) {
+                if (k === 'r') {
+                    return a > b ? a : b;
+                } else if (k === 'step') {
+                    return (a === b) ? a : (a == null) ? b : a;
+                }
+                return undefined;
+            });
+        }).each(function(d) { d.fill = $filter('color')(d['2008']); }).value();
 
-        /* jslint newcap: true */
-        var csvArray = CSVToArray(response.data);
-        var csvHeader = _.invert(_.first(csvArray.splice(0, 1)));
-
-        for (var i = 0; i < csvArray.length; ++i) {
-            var title = csvArray[i][csvHeader.Titre].trim();
-            var year = csvArray[i][csvHeader['Année']].trim();
-            var group = csvArray[i][csvHeader.Groupe].trim();
-            var type = csvArray[i][csvHeader.Type].trim();
-            var step = parseInt(csvArray[i][csvHeader.Etape].trim());
-            var hierarchie = parseInt(csvArray[i][csvHeader['Hiérarchie']]);
-            if (data[title] == null) {
-                data[title] = {
-                    id : i,
-                    name : title,
-                    type : type,
-                    r : hierarchie,
-                    step : step
-                };
-            }
-            data[title][year] = group;
-        }
-        _.each(data, function(d) {
-            d.fill = $filter('color')(d['2008']);
-        });
-
-        allData = _.values(data);
         goToStep(0);
     });
 }]);
