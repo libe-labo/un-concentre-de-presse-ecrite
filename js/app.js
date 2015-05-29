@@ -16,7 +16,7 @@ app.filter('color', function() {
         var colour = '#';
         for (i = 0; i < 3; ++i) {
             var part = (hash >> i * 8) & 0xFF;
-            part = Math.max(Math.min(part, 200), 100);
+            part = Math.max(Math.min(part, 300), 100);
             colour += ('00' + part.toString(16)).slice(-2);
         }
         return colour;
@@ -89,7 +89,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
                 id : i,
                 name : d.Titre.trim(),
                 type : d.Type.trim(),
-                r : +d['Hiérarchie'],
+                r : +(d['Hiérarchie'] || 1),
                 step : +d.Etape,
             };
             out[d['Année']] = d.Groupe;
@@ -98,10 +98,8 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
             return _.merge(d[0], d[1], function(a, b, k) {
                 if (k === 'r') {
                     return a > b ? a : b;
-                } else if (k === 'step') {
-                    return (a === b) ? a : (a == null) ? b : a;
                 }
-                return undefined;
+                return (a === b) ? a : (a == null) ? b : a;
             });
         }).each(function(d) { d.fill = $filter('color')(d['2008']); }).value();
 
