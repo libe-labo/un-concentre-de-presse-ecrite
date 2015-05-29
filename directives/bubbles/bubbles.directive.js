@@ -169,9 +169,12 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
             $scope.theSwitches = [ ];
 
             $scope.activateSwitch = function(theSwitch) {
-                if ($scope.theSwitches.indexOf(theSwitch) >= 0) {
-                    $scope.activeSwitch = theSwitch;
-                    refresh();
+                for (var i = 0; i < $scope.theSwitches.length; ++i) {
+                    if ($scope.theSwitches[i].value === theSwitch) {
+                        $scope.activeSwitch = theSwitch;
+                        refresh();
+                        break;
+                    }
                 }
             };
 
@@ -184,9 +187,13 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
             $scope.$watch(function() { return $scope.switches; }, function() {
                 $scope.theSwitches = [];
                 for (var i = 0; i < $scope.switches.length; ++i) {
-                    $scope.theSwitches.push($scope.switches[i]);
+                    if ($scope.switches[i] instanceof Object) {
+                        $scope.theSwitches.push($scope.switches[i]);
+                    } else {
+                        $scope.theSwitches.push({ label : $scope.switches[i] , value : $scope.switches[i] });
+                    }
                 }
-                $scope.activateSwitch($scope.theSwitches[0]);
+                $scope.activateSwitch($scope.theSwitches[0].value);
             }, true);
         }
     };

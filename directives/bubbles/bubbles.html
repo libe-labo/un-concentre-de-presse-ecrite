@@ -1,7 +1,7 @@
 <div class="switches">
     <ul>
-        <li ng-repeat="switch in switches">
-            <button class="btn btn-default" ng-class="{ active : switch === activeSwitch }" ng-click="activateSwitch(switch)">{{ switch }}</button>
+        <li ng-repeat="switch in theSwitches">
+            <button class="btn btn-default" ng-class="{ active : switch.value === activeSwitch }" ng-click="activateSwitch(switch.value)">{{ switch.label }}</button>
         </li>
     </ul>
 </div>

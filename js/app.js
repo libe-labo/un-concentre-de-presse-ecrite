@@ -33,7 +33,10 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
     ];
     $scope.currentStep = 0;
 
-    $scope.switches = ['2008', '2015'];
+    $scope.switches = [
+        { label : 'En 2008' , value : '2008' },
+        { label : 'En 2015' , value : '2015' }
+    ];
 
     $scope.isFirstStep = function() {
         return $scope.currentStep === 0;
@@ -81,7 +84,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
             data[title][year] = group;
         }
         _.each(data, function(d) {
-            d.fill = $filter('color')(d['2008'])
+            d.fill = $filter('color')(d['2008']);
         });
 
         $scope.data = _.values(data);
