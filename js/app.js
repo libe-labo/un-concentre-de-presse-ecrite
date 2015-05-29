@@ -23,10 +23,16 @@ app.filter('color', function() {
     };
 });
 
-app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $filter) {
+app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
+                        '$rootScope', function($scope, $http, $filter, $timeout, $rootScope) {
+    var allData;
     $scope.data = [];
 
     $scope.steps = [
+        { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
+        { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
+        { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
+        { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
         { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
         { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' },
         { title : 'Lorem Ipsum' , text : 'Lorem ipsum Dolor proident incididunt magna mollit in consectetur culpa magna ut cillum qui cillum id deserunt consectetur ut pariatur sunt laborum dolor occaecat ad consectetur sit.' }
@@ -49,6 +55,17 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
     var goToStep = function(index) {
         if (index >= 0 && $scope.steps[index] != null) {
             $scope.currentStep = index;
+            $rootScope.$broadcast('bubbles:switchTo', '2008');
+            if ($scope.isFirstStep()) {
+                $scope.data = _.clone(allData);
+            } else {
+                $scope.data = _.filter(allData, function(d) {
+                    return d.step === $scope.currentStep;
+                });
+                $timeout(function() {
+                    $rootScope.$broadcast('bubbles:switchTo', '2015');
+                }, 600);
+            }
         }
     };
 
@@ -72,6 +89,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
             var year = csvArray[i][csvHeader['Année']].trim();
             var group = csvArray[i][csvHeader.Groupe].trim();
             var type = csvArray[i][csvHeader.Type].trim();
+            var step = parseInt(csvArray[i][csvHeader.Etape].trim());
             var hierarchie = parseInt(csvArray[i][csvHeader['Hiérarchie']]);
             if (data[title] == null) {
                 data[title] = {
@@ -79,6 +97,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
                     name : title,
                     type : type,
                     r : hierarchie,
+                    step : step
                 };
             }
             data[title][year] = group;
@@ -87,6 +106,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $f
             d.fill = $filter('color')(d['2008']);
         });
 
-        $scope.data = _.values(data);
+        allData = _.values(data);
+        goToStep(0);
     });
 }]);

@@ -44,7 +44,7 @@
             <section class="content">
                 <div class="steps">
                     <div ng-repeat="step in steps" ng-if="currentStep === $index">
-                        <h2>{{ $index + 1 }}. {{ step.title }}</h2>
+                        <h2>{{ $index }}. {{ step.title }}</h2>
                         <p>{{ step.text }}</p>
                     </div>
                     <div class="steps__navigation">
