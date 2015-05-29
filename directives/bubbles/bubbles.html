@@ -1,6 +1,6 @@
 <div class="switches">
-    <ul style="list-style-type:none;">
-        <li style="display:inline-block;" ng-repeat="switch in switches">
+    <ul>
+        <li ng-repeat="switch in switches">
             <button class="btn btn-default" ng-class="{ active : switch === activeSwitch }" ng-click="activateSwitch(switch)">{{ switch }}</button>
         </li>
     </ul>

@@ -5,6 +5,7 @@ html, body {
     width: 100%;
 }
 
+
 section.content {
     position: relative;
     width: 75%;
@@ -16,31 +17,72 @@ section.content {
             box-sizing: border-box;
 }
 
+section.content h2 {
+    font-family: "Trade Gothic Bold Cond";
+    font-size: 3em;
+}
+
+section.content p {
+    font-family: "Proxima Nova Regular";
+    font-size: 1.2em;
+}
+
+section.content div.steps {
+    width: 580px;
+    margin: 0 auto;
+    padding: 1px 25px 25px 25px;
+}
+
+section.content div.steps__navigation a {
+    color: #000;
+    float: left;
+}
+
+section.content div.steps__navigation a:last-of-type {
+    float: right;
+}
+
 /*
 ** SVG
 */
 
+div.bubbles {
+    position: relative;
+}
+
 div.switches {
-    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 25px;
     padding: 10px 0;
 }
 
+div.switches ul {
+    list-style-type: none;
+}
+
 div.switches li {
-    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 div.switches li:last-of-type {
-    margin-right: 0;
+    margin-bottom: 0;
 }
 
 div.d3 {
     width: 100%;
-    height: 775px;
+    height: 600px;
 }
 
 svg circle.bubble {
     stroke-width: 2px;
     cursor: pointer;
+}
+
+svg text.label {
+    font-family: "Trade Gothic Bold Cond";
+    font-size: 1em;
+    pointer-events: none;
 }
 
 /*
