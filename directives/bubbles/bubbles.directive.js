@@ -14,7 +14,7 @@ angular.module('app').directive('bubbles', [function() {
         var colour = '#';
         for (i = 0; i < 3; ++i) {
             var part = (hash >> i * 8) & 0xFF;
-            part = Math.max(Math.min(part, 200), 50);
+            part = Math.max(Math.min(part, 200), 100);
             colour += ('00' + part.toString(16)).slice(-2);
         }
         return colour;
@@ -28,10 +28,10 @@ angular.module('app').directive('bubbles', [function() {
                 return {
                     id : d.id,
                     name : d.name,
-                    r : Math.round((Math.random() * 10) + 10), // Tmp
+                    r : (d.r || 1) * 10,
                     x : 0,
                     y : 0,
-                    fill : colorFromString(clusterBy(d)),
+                    fill : colorFromString(d['2008']),
                     cluster : clusterBy(d),
                     fadedOut : parseInt(Math.round(Math.random())) // Fake / Tmp
                 };
@@ -53,7 +53,7 @@ angular.module('app').directive('bubbles', [function() {
     };
 
     var getClusterCenter = function(data, clusterBy, width, height) {
-        var clusters = _(data).map(d3.f('cluster')).groupBy().map(function(d, k) {
+        var clusters = _(data).map(ƒ('cluster')).groupBy().map(function(d, k) {
             var item = {
                 name : k,
                 value : d.length / 4
@@ -63,8 +63,9 @@ angular.module('app').directive('bubbles', [function() {
         }).value();
 
         var map = d3.layout.pack().size([width, height]).sort(function(a, b) {
-            return d3.descending(a.value, b.value);
-        });
+            return d3.descending(a.name, b.name);
+            // return d3.descending(a.value, b.value);
+        }).padding(100);
         map.nodes({ children : clusters });
         clusters = _.indexBy(clusters, 'name');
 
@@ -82,9 +83,9 @@ angular.module('app').directive('bubbles', [function() {
 
             var padding = {
                 top : 0,
-                right : 50,
+                right : 0,
                 bottom : 0,
-                left : 50
+                left : 0
             };
             var width = svg.width();
             var height = svg.height();
@@ -117,13 +118,21 @@ angular.module('app').directive('bubbles', [function() {
                 clusterCenters = getClusterCenter(nodes, clusterBy, width, height);
 
                 var bubbles = svg.selectAll('circle.bubble')
-                                 .data(nodes, d3.f('id'));
+                                 .data(nodes, ƒ('id'));
+
+                // var clusters = svg.selectAll('circle.cluster').data(_.values(clusterCenters), ƒ('name'));
+                // clusters.enter()
+                //         .insert('circle.cluster', '.bubble')
+                //         .attr('fill', function(d) { return d3.rgb(colorFromString(d.name)).brighter(); });
+                // clusters.exit().remove();
+                // clusters.attr('r', ƒ('r'))
+                //         .attr('cx', ƒ('x'))
+                //         .attr('cy', ƒ('y'));
 
                 // Create new bubbles
-                bubbles.enter().append('circle')
-                               .attr('class', 'bubble')
-                               .attr('r', d3.f('r'))
-                               .attr('id', d3.f('name'))
+                bubbles.enter().append('circle.bubble')
+                               .attr('r', ƒ('r'))
+                               .attr('id', ƒ('name'))
                                .attr('x', 0)
                                .attr('y', 0)
                                .on('mouseenter', function() {
@@ -137,13 +146,13 @@ angular.module('app').directive('bubbles', [function() {
                 bubbles.exit().remove();
 
                 // Update existing bubbles
-                bubbles.attr('fill', d3.f('fill'))
-                       .attr('opacity', function(d) { return d.fadedOut ? 0.2 : 1; })
+                bubbles.attr('fill', ƒ('fill'))
+                       // .attr('opacity', function(d) { return d.fadedOut ? 0.2 : 1; })
                        .attr('stroke', function(d) {
                             return d3.rgb(d.fill).darker(1.5);
                        }).each(function(d) {
                             // We're using Tipsy to show tooltips on mouseover
-                            $(this).attr('original-title', d.name + ' - ' + d.cluster);
+                            $(this).attr('original-title', d.name);
                             $(this).tipsy({
                                 gravity : $.fn.tipsy.autoNS,
                                 title : function() { return $(this).attr('original-title'); }
@@ -152,17 +161,17 @@ angular.module('app').directive('bubbles', [function() {
 
                 // Enable and start the force layout
                 force.nodes(nodes).size([width, height]);
-                force.gravity(-0.01).charge(charge).friction(0.7).on('tick', function(e) {
+                force.gravity(0.06).charge(charge).friction(0.6).on('tick', function(e) {
                     bubbles.each(function(d) {
                         // Get attracted by the cluster's center
                         var clusterCenter = clusterCenters[d.cluster] || { x : 0 , y : 0 };
-                        d.x = d.x + (clusterCenter.x - d.x) * e.alpha * (0.3);
-                        d.y = d.y + (clusterCenter.y - d.y) * e.alpha * (0.3);
+                        d.x += (clusterCenter.x - d.x) * (e.alpha * 0.2);
+                        d.y += (clusterCenter.y - d.y) * (e.alpha * 0.2);
                         // Make sure everything is still inside the viewport
                         d.x = Math.max(d.r * 2, Math.min(d.x, width - d.r * 2));
                         d.y = Math.max(d.r * 2, Math.min(d.y, height - d.r * 2));
-                    }).attr('cx', d3.f('x'))
-                      .attr('cy', d3.f('y'));
+                    }).attr('cx', ƒ('x'))
+                      .attr('cy', ƒ('y'));
                 });
                 force.start();
             };
