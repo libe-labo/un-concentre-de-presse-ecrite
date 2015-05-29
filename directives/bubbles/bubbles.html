@@ -1,4 +1,4 @@
-<div class="switches">
+<div class="switches" ng-if="theSwitches.length > 1">
     <ul>
         <li ng-repeat="switch in theSwitches">
             <button class="btn btn-default" ng-class="{ active : switch.value === activeSwitch }" ng-click="activateSwitch(switch.value)">{{ switch.label }}</button>
