@@ -1,23 +1,7 @@
 'use strict';
 
-angular.module('app').directive('bubbles', [function() {
-    // Utility function which convert whatever string in an hexadecimal color code
+angular.module('app').directive('bubbles', ['$filter', function($filter) {
     var colorFromString = function(str) {
-        str = str || '';
-
-        var i, hash;
-        i = hash = 0;
-        while (i < str.length) {
-            hash = str.charCodeAt(i++) + ((hash << 5) - hash);
-        }
-
-        var colour = '#';
-        for (i = 0; i < 3; ++i) {
-            var part = (hash >> i * 8) & 0xFF;
-            part = Math.max(Math.min(part, 200), 100);
-            colour += ('00' + part.toString(16)).slice(-2);
-        }
-        return colour;
     };
 
     var computeNodes = function(data, clusterBy, oldNodes) {
@@ -31,9 +15,8 @@ angular.module('app').directive('bubbles', [function() {
                     r : (d.r || 1) * 10,
                     x : 0,
                     y : 0,
-                    fill : colorFromString(d['2008']),
+                    fill : d.fill || $filter('color')(d.name),
                     cluster : clusterBy(d),
-                    fadedOut : parseInt(Math.round(Math.random())) // Fake / Tmp
                 };
             }
             return undefined;
@@ -63,8 +46,7 @@ angular.module('app').directive('bubbles', [function() {
         }).value();
 
         var map = d3.layout.pack().size([width, height]).sort(function(a, b) {
-            return d3.descending(a.name, b.name);
-            // return d3.descending(a.value, b.value);
+            return d3.ascending(a.value, b.value);
         }).padding(100);
         map.nodes({ children : clusters });
         clusters = _.indexBy(clusters, 'name');
@@ -132,23 +114,22 @@ angular.module('app').directive('bubbles', [function() {
 
                 // Create new bubbles
                 bubbles.enter().append('circle.bubble')
-                               .attr('r', ƒ('r'))
-                               .attr('id', ƒ('name'))
-                               .attr('x', 0)
-                               .attr('y', 0)
-                               .on('mouseenter', function() {
-                                    d3.select(this).classed('hover', true);
-                               })
-                               .on('mouseleave', function() {
-                                    d3.select(this).classed('hover', false);
-                               }).call(force.drag);
+                       .attr('r', ƒ('r'))
+                       .attr('id', ƒ('name'))
+                       .attr('x', 0)
+                       .attr('y', 0)
+                       .on('mouseenter', function() {
+                            d3.select(this).classed('hover', true);
+                       })
+                       .on('mouseleave', function() {
+                            d3.select(this).classed('hover', false);
+                       }).call(force.drag);
 
                 // Remove old bubbles
                 bubbles.exit().remove();
 
                 // Update existing bubbles
                 bubbles.attr('fill', ƒ('fill'))
-                       // .attr('opacity', function(d) { return d.fadedOut ? 0.2 : 1; })
                        .attr('stroke', function(d) {
                             return d3.rgb(d.fill).darker(1.5);
                        }).each(function(d) {
@@ -162,7 +143,7 @@ angular.module('app').directive('bubbles', [function() {
 
                 // Enable and start the force layout
                 force.nodes(nodes).size([width, height]);
-                force.gravity(0.06).charge(charge).friction(0.6).on('tick', function(e) {
+                force.gravity(0.1).charge(charge).friction(0.7).on('tick', function(e) {
                     bubbles.each(function(d) {
                         // Get attracted by the cluster's center
                         var clusterCenter = clusterCenters[d.cluster] || { x : 0 , y : 0 };

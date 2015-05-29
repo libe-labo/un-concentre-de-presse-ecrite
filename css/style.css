@@ -25,6 +25,7 @@ section.content h2 {
 section.content p {
     font-family: "Proxima Nova Regular";
     font-size: 1.2em;
+    line-height: 1.2em;
 }
 
 section.content div.steps {

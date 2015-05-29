@@ -2,7 +2,28 @@
 
 var app = angular.module('app', ['lheader']);
 
-app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
+// Filter which convert whatever string in an hexadecimal color code
+app.filter('color', function() {
+    return function(str) {
+        str = (str || '').toUpperCase();
+
+        var i, hash;
+        i = hash = 0;
+        while (i < str.length) {
+            hash = str.charCodeAt(i++) + ((hash << 3) - hash);
+        }
+
+        var colour = '#';
+        for (i = 0; i < 3; ++i) {
+            var part = (hash >> i * 8) & 0xFF;
+            part = Math.max(Math.min(part, 200), 100);
+            colour += ('00' + part.toString(16)).slice(-2);
+        }
+        return colour;
+    };
+});
+
+app.controller('Ctrl', ['$scope', '$http', '$filter', function($scope, $http, $filter) {
     $scope.data = [];
 
     $scope.steps = [
@@ -54,11 +75,14 @@ app.controller('Ctrl', ['$scope', '$http', function($scope, $http) {
                     id : i,
                     name : title,
                     type : type,
-                    r : hierarchie
+                    r : hierarchie,
                 };
             }
             data[title][year] = group;
         }
+        _.each(data, function(d) {
+            d.fill = $filter('color')(d['2008'])
+        });
 
         $scope.data = _.values(data);
     });
