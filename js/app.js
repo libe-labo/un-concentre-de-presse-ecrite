@@ -10,7 +10,7 @@ app.filter('color', function() {
         var i, hash;
         i = hash = 0;
         while (i < str.length) {
-            hash = str.charCodeAt(i++) + ((hash << 3) - hash);
+            hash = str.charCodeAt(i++) + ((hash << 5) - hash);
         }
 
         var colour = '#';
@@ -52,22 +52,28 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
         return $scope.currentStep === $scope.steps.length - 1;
     };
 
-    var goToStep = function(index) {
-        if (index >= 0 && $scope.steps[index] != null) {
-            $scope.currentStep = index;
-            $rootScope.$broadcast('bubbles:switchTo', '2008');
-            if ($scope.isFirstStep()) {
-                $scope.data = _.clone(allData);
-            } else {
-                $scope.data = _.filter(allData, function(d) {
-                    return d.step === $scope.currentStep;
-                });
-                $timeout(function() {
-                    $rootScope.$broadcast('bubbles:switchTo', '2015');
-                }, 600);
+    var goToStep = (function() {
+        var timeout;
+        return function(index) {
+            if (index >= 0 && $scope.steps[index] != null) {
+                $timeout.cancel(timeout);
+
+                $scope.currentStep = index;
+
+                $rootScope.$broadcast('bubbles:switchTo', '2008');
+                if ($scope.isFirstStep()) {
+                    $scope.data = _.clone(allData);
+                } else {
+                    $scope.data = _.filter(allData, function(d) {
+                        return d.step === $scope.currentStep;
+                    });
+                    timeout = $timeout(function() {
+                        $rootScope.$broadcast('bubbles:switchTo', '2015');
+                    }, 1500);
+                }
             }
-        }
-    };
+        };
+    })();
 
     $scope.goToPrevStep = function() {
         goToStep($scope.currentStep - 1);
