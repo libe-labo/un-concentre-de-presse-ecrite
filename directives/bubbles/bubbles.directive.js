@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').directive('bubbles', ['$filter', function($filter) {
+angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($filter, $rootScope) {
     var colorFromString = function(str) {
     };
 
@@ -148,8 +148,8 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
                     bubbles.each(function(d) {
                         // Get attracted by the cluster's center
                         var clusterCenter = clusterCenters[d.cluster] || { x : 0 , y : 0 };
-                        d.x += (clusterCenter.x - d.x) * (e.alpha * 0.2);
-                        d.y += (clusterCenter.y - d.y) * (e.alpha * 0.2);
+                        d.x += (clusterCenter.x - d.x) * (e.alpha * 0.18);
+                        d.y += (clusterCenter.y - d.y) * (e.alpha * 0.18);
                         // Make sure everything is still inside the viewport
                         d.x = Math.max(d.r * 2, Math.min(d.x, width - d.r * 2));
                         d.y = Math.max(d.r * 2, Math.min(d.y, height - d.r * 2));
@@ -181,7 +181,7 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
                 }
             };
 
-            $scope.$watch(function() { return $scope.data.length; }, function() {
+            $scope.$watch(function() { return $scope.data; }, function() {
                 if ($scope.data.length > 0) {
                     refresh();
                 }
@@ -198,6 +198,10 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
                 }
                 $scope.activateSwitch($scope.theSwitches[0].value);
             }, true);
+
+            $rootScope.$on('bubbles:switchTo', function(event, param) {
+                $scope.activateSwitch(param);
+            });
         }
     };
 }]);
