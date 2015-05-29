@@ -175,6 +175,13 @@ angular.module('app').directive('bubbles', [function() {
                       .attr('cy', ƒ('y'));
                 });
                 force.start();
+
+                svg.selectAll('.label').remove();
+                svg.selectAll('.label')
+                   .data(_.values(clusterCenters)).enter()
+                   .append('text.label')
+                   .text(ƒ('name'))
+                   .translate(function(d) { return [d.x - (d.name.length * 2), d.y]; });
             };
 
             // Switches
