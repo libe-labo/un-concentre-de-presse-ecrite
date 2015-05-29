@@ -75,7 +75,8 @@ angular.module('app').directive('bubbles', [function() {
     return {
         restrict : 'EA',
         scope : {
-            data : '='
+            data : '=',
+            switches : '='
         },
         templateUrl : 'directives/bubbles/bubbles.html',
         link : function($scope, element) {
@@ -177,24 +178,27 @@ angular.module('app').directive('bubbles', [function() {
             };
 
             // Switches
-            $scope.switches = [
-                '2008',
-                '2015'
-            ];
+            $scope.theSwitches = [ ];
 
             $scope.activateSwitch = function(theSwitch) {
-                if ($scope.switches.indexOf(theSwitch) >= 0) {
+                if ($scope.theSwitches.indexOf(theSwitch) >= 0) {
                     $scope.activeSwitch = theSwitch;
                     refresh();
                 }
             };
 
-            $scope.activateSwitch($scope.switches[0]);
-
             $scope.$watch(function() { return $scope.data.length; }, function() {
                 if ($scope.data.length > 0) {
                     refresh();
                 }
+            }, true);
+
+            $scope.$watch(function() { return $scope.switches; }, function() {
+                $scope.theSwitches = [];
+                for (var i = 0; i < $scope.switches.length; ++i) {
+                    $scope.theSwitches.push($scope.switches[i]);
+                }
+                $scope.activateSwitch($scope.theSwitches[0]);
             }, true);
         }
     };

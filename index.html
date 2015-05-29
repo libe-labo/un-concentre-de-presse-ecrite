@@ -42,7 +42,17 @@
             <lheader></lheader>
 
             <section class="content">
-                <div bubbles data="data"></div>
+                <div class="steps">
+                    <div ng-repeat="step in steps" ng-if="currentStep === $index">
+                        <h2>{{ $index + 1 }}. {{ step.title }}</h2>
+                        <p>{{ step.text }}</p>
+                    </div>
+                    <div class="steps__navigation">
+                        <a ng-click="goToPrevStep()" href="#" ng-show="!isFirstStep()"><i class="fa fa-chevron-left fa-2x"></i></a>
+                        <a ng-click="goToNextStep()" href="#" ng-show="!isLastStep()"><i class="fa fa-chevron-right fa-2x"></i></a>
+                    </div>
+                </div>
+                <div bubbles data="data" switches="switches" class="bubbles"></div>
             </section>
         </div>
     <!-- Chartbeat -->
