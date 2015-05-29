@@ -58,7 +58,8 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
         restrict : 'EA',
         scope : {
             data : '=',
-            switches : '='
+            switches : '=',
+            labels : '='
         },
         templateUrl : 'directives/bubbles/bubbles.html',
         link : function($scope, element) {
@@ -158,11 +159,13 @@ angular.module('app').directive('bubbles', ['$filter', function($filter) {
                 force.start();
 
                 svg.selectAll('.label').remove();
-                svg.selectAll('.label')
-                   .data(_.values(clusterCenters)).enter()
-                   .append('text.label')
-                   .text(ƒ('name'))
-                   .translate(function(d) { return [d.x - (d.name.length * 2), d.y]; });
+                if ($scope.labels) {
+                    svg.selectAll('.label')
+                       .data(_.values(clusterCenters)).enter()
+                       .append('text.label')
+                       .text(ƒ('name'))
+                       .translate(function(d) { return [d.x - (d.name.length * 2), d.y]; });
+                }
             };
 
             // Switches
