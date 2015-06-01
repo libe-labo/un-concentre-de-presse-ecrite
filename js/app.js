@@ -38,6 +38,8 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
     $scope.steps = [];
     $scope.currentStep = 0;
 
+    $scope.legend = 'La taille des bulles correspond à l’audience : plus elles sont grosse, plus le titre est important. C’est une sélection des principaux titres des groupes de presse répartis en fonction des actionnaires majoritaires.';
+
     $scope.switches = [
         { label : 'En 2008' , value : '2008' },
         { label : 'En 2015' , value : '2015' }

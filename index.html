@@ -43,7 +43,7 @@
             <section class="content">
                 <div class="steps">
                     <div ng-repeat="step in steps" ng-if="currentStep === $index">
-                        <h2>{{ $index }}. {{ step.title }}</h2>
+                        <h2>{{ step.title }}</h2>
                         <p ng-bind-html="step.text"></p>
                     </div>
                     <div class="steps__navigation">
@@ -54,7 +54,7 @@
                         <a ng-click="goToNextStep()" href="#" ng-show="!isLastStep()"><i class="fa fa-chevron-right fa-2x"></i></a>
                     </div>
                 </div>
-                <div bubbles data="data" switches="switches" labels="true" class="bubbles"></div>
+                <div bubbles data="data" switches="switches" labels="true" legend="legend" class="bubbles"></div>
             </section>
         </div>
     <!-- Chartbeat -->

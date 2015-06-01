@@ -59,7 +59,8 @@ angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($f
         scope : {
             data : '=',
             switches : '=',
-            labels : '='
+            labels : '=',
+            legend : '='
         },
         templateUrl : 'directives/bubbles/bubbles.html',
         link : function($scope, element) {

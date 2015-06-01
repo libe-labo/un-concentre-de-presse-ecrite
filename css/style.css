@@ -20,6 +20,7 @@ section.content {
 section.content h2 {
     font-family: "Trade Gothic Bold Cond";
     font-size: 3em;
+    margin: 10px 0;
 }
 
 section.content p {
@@ -29,7 +30,7 @@ section.content p {
 }
 
 section.content div.steps {
-    width: 580px;
+    width: 650px;
     margin: 0 auto;
     padding: 1px 25px 25px 25px;
 }
@@ -86,20 +87,43 @@ div.bubbles {
 div.switches {
     position: absolute;
     top: 0;
-    left: 25px;
-    padding: 10px 0;
+    left: 0;
+    font-size: .8em;
+    border: 2px solid #C42121;
+    border-radius: .3em;
+    background-color: #fff;
 }
 
 div.switches ul {
     list-style-type: none;
+    width: 100%;
+    border-bottom: 2px solid #C42121;
 }
 
 div.switches li {
-    margin-bottom: 5px;
+    display: inline-block;
+    width: 50%;
 }
 
-div.switches li:last-of-type {
-    margin-bottom: 0;
+div.switches li button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    font-family: "Trade Gothic Bold Cond";
+}
+
+div.switches li button.active {
+    background-color: #C42121;
+    color: #fff;
+}
+
+div.switches li:first-of-type {
+    border-right: 1px solid #C42121;
+}
+
+div.switches p {
+    padding: 10px;
 }
 
 div.d3 {
