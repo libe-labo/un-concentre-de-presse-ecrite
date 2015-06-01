@@ -34,14 +34,46 @@ section.content div.steps {
     padding: 1px 25px 25px 25px;
 }
 
-section.content div.steps__navigation a {
-    color: #000;
-    float: left;
+section.content div.steps__navigation {
+    position: relative;
+    width: 100%;
+    height: 30px;
 }
 
-section.content div.steps__navigation a:last-of-type {
-    float: right;
+
+section.content div.steps__navigation > a {
+    color: #000;
+    position: absolute;
+    bottom: 0;
 }
+
+section.content div.steps__navigation > a:first-of-type {
+    left: 5px;
+}
+
+section.content div.steps__navigation > a:last-of-type {
+    right: 5px;
+}
+
+section.content div.steps__navigation ul {
+    list-style-type: none;
+    text-align: center;
+    margin-top: 5px;
+}
+
+section.content div.steps__navigation ul li {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+section.content div.steps__navigation ul li:last-of-type {
+    margin-right: 0;
+}
+
+section.content div.steps__navigation ul li a {
+    color: #000;
+}
+
 
 /*
 ** SVG

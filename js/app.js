@@ -52,7 +52,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
         return $scope.currentStep === $scope.steps.length - 1;
     };
 
-    var goToStep = (function() {
+    $scope.goToStep = (function() {
         var timeout;
         return function(index) {
             if (index >= 0 && $scope.steps[index] != null) {
@@ -76,11 +76,11 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
     })();
 
     $scope.goToPrevStep = function() {
-        goToStep($scope.currentStep - 1);
+        $scope.goToStep($scope.currentStep - 1);
     };
 
     $scope.goToNextStep = function() {
-        goToStep($scope.currentStep + 1);
+        $scope.goToStep($scope.currentStep + 1);
     };
 
     $http.get('data/data.csv').then(function(response) {
@@ -103,6 +103,6 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
             });
         }).each(function(d) { d.fill = $filter('color')(d['2008']); }).value();
 
-        goToStep(0);
+        $scope.goToStep(0);
     });
 }]);
