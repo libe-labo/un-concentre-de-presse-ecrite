@@ -194,6 +194,23 @@ angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($f
             $rootScope.$on('bubbles:switchTo', function(event, param) {
                 $scope.activateSwitch(param);
             });
+
+            $(window).on('resize', _.debounce(function() {
+                var e = angular.element(element).find('div.d3');
+                width = e.width();
+                height = e.height();
+
+                d3.select(e.get(0)).select('svg')
+                  .attr('width', width)
+                  .attr('height', height);
+
+                width = width - padding.left - padding.right;
+                height = height - padding.top - padding.bottom;
+                svg.attr('width', width)
+                   .attr('height', height);
+
+                refresh();
+            }));
         }
     };
 }]);
