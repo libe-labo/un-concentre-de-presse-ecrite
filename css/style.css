@@ -5,6 +5,9 @@ html, body {
     width: 100%;
 }
 
+em {
+    font-style: italic !important;
+}
 
 section.content {
     position: relative;
@@ -39,6 +42,10 @@ section.content div.steps span {
     text-transform: uppercase;
     color: #C42121;
     font-family: "Trade Gothic Bold Cond";
+    text-align: center;
+    display: block;
+    width: 100%;
+    font-size: 1.5em;
 }
 
 section.content div.steps__navigation {

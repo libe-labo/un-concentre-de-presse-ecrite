@@ -11,7 +11,7 @@
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.tipsy/1.0.2/jquery.tipsy.min.js"></script>
 
-        <title>Libération.fr – </title>
+        <title>Libération.fr – Sept ans de recomposition du paysage médiatique</title>
         <meta name="description" content="Tout savoir sur les dernières actualités politiques, monde, société, sports, écologie avec le journal en ligne Libération.">
         <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
         <meta name="keywords" content="actualités, news">
@@ -32,7 +32,7 @@
         <link rel="shortcut icon" href="http://s1.libe.com/favicon.ico">
         <link rel="shortcut icon" href="http://s1.libe.com/favicon.png">
 
-        <link rel="canonical" href="http://www.liberation.fr/apps/2015/05/pantheon/index.html">
+        <link rel="canonical" href="http://www.liberation.fr/apps/2015/06/medias/index.html">
         <script type="text/javascript" async="" src="http://www.google-analytics.com/analytics.js"></script>
     </head>
 
@@ -48,16 +48,21 @@
                         <p ng-bind-html="step.text"></p>
                     </div>
                     <div class="steps__navigation">
-                        <a ng-click="goToPrevStep()" href="#" ng-show="!isFirstStep()"><i class="fa fa-chevron-left fa-2x"></i></a>
+                        <a ng-click="goToPrevStep()" href="" ng-show="!isFirstStep()"><i class="fa fa-chevron-left fa-2x"></i></a>
                         <ul>
-                            <li ng-repeat="step in steps"><a href="" ng-click="goToStep($index)"><i class="fa" ng-class="{'fa-circle':$index===currentStep,'fa-circle-o':$index!==currentStep}"></i></a></li>
+                            <li ng-repeat="step in steps">
+                                <a href="" ng-click="goToStep($index)">
+                                    <i class="fa" ng-class="{'fa-circle':$index===currentStep,'fa-circle-o':$index!==currentStep}"></i>
+                                </a>
+                            </li>
                         </ul>
-                        <a ng-click="goToNextStep()" href="#" ng-show="!isLastStep()"><i class="fa fa-chevron-right fa-2x"></i></a>
+                        <a ng-click="goToNextStep()" href="" ng-show="!isLastStep()"><i class="fa fa-chevron-right fa-2x"></i></a>
                     </div>
                 </div>
                 <div bubbles data="data" switches="switches" labels="true" legend="legend" class="bubbles"></div>
             </section>
         </div>
+
     <!-- Chartbeat -->
     <script type='text/javascript'>
         var _sf_async_config={};
@@ -100,7 +105,7 @@
         xtsd = "http://logliberation";
         xtsite = "381060";
         xtn2 = "48";        // level 2
-        xtpage = "2015::05::Pantheon";        //page name (with the use of :: to create chapters)
+        xtpage = "2015::06::Medias";        //page name (with the use of :: to create chapters)
         xtdi = "";
         xt_pagetype = "";
         xt_multc = "&x1=0&x2=43&x3=&x4=&x5=&x6=7&x7=";
@@ -110,7 +115,7 @@
         window.xtparam += "&ptype="+xt_pagetype+"&ac="+xt_ac+"&an="+xt_an+xt_multc;
     </script>
     <noscript>
-        <img width="1" height="1" src="http://logliberation.xiti.com/hit.xiti?s=381060&amp;s2=56&amp;p=2015::05::Pantheon&amp;di=&amp;" >
+        <img width="1" height="1" src="http://logliberation.xiti.com/hit.xiti?s=381060&amp;s2=56&amp;p=2015::06::Medias&amp;di=&amp;" >
     </noscript>
     <script type="text/javascript" src="http://s1.libe.com/bloom/theme/js/xtcore.js"></script>
     <!-- // Xiti -->

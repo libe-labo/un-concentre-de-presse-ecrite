@@ -25,23 +25,23 @@ app.filter('color', function() {
 
 app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$location', '$rootScope',
                         function($scope, $http, $filter, $timeout, $sce, $location, $rootScope) {
-    var colors = [
-        '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D', '#334D5C', '#DFF2EF', '#4E7DA6',
-        '#C42121', '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758', '#FFAD38', '#2C3E50',
-        '#3E5101', '#839412', '#BDC032', '#D9A404', '#D96704', '#D9FFA8', '#F2EFCD'
-    ];
+
+    var colors = [ '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D', '#334D5C', '#DFF2EF', '#4E7DA6',
+                   '#C42121', '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758', '#FFAD38', '#2C3E50',
+                   '#3E5101', '#839412', '#BDC032', '#D9A404', '#D96704', '#D9FFA8', '#F2EFCD' ];
 
     var allData;
     $scope.data = [];
     $scope.steps = [];
     $scope.currentStep = 0;
 
-    $scope.legend = 'La taille des bulles correspond à l’audience : plus elles sont grosse, plus ' +
-                    'le titre est important. C’est une sélection des principaux titres des ' +
-                    'groupes de presse répartis en fonction des actionnaires majoritaires.';
+    $scope.legend = 'Sélection des principaux groupes et titres répartis en fonction des ' +
+                    'actionnaires majoritaires. La taille des cercles correspond à l’audience ' +
+                    'ou à la diffusion moyenne.';
 
     $scope.switches = [
-        { label : 'En 2008' , value : '2008' }, { label : 'En 2015' , value : '2015' }
+        { label : 'En 2008' , value : '2008' },
+        { label : 'En 2015' , value : '2015' }
     ];
 
     $scope.isFirstStep = function() {
@@ -60,6 +60,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
                 $timeout.cancel(timeout);
 
                 $scope.currentStep = index;
+                $location.search('step', $scope.currentStep);
 
                 $rootScope.$broadcast('bubbles:switchTo', '2008');
                 if ($scope.isFirstStep()) {
@@ -114,6 +115,9 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
 
             _.each(allData, function(d) {
                 d.fill = colors[groups.indexOf(_.isUndefined(d['2008']) ? d['2015'] : d['2008'])];
+                if (d.name === 'Le Plus') {
+                    d.fill = colors[groups.indexOf('Groupe Perdriel')];
+                }
             });
 
             var step = $location.search().step || 0;
