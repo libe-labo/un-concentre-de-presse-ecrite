@@ -92,7 +92,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
                 r : +(d['Hiérarchie'] || 1),
                 step : +d.Etape,
             };
-            out[d['Année']] = d.Groupe;
+            out[d['Année']] = d.Groupe.trim();
             return out;
         })).groupBy('name').map(function(d) {
             return _.merge(d[0], d[1], function(a, b, k) {
