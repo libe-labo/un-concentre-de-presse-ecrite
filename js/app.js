@@ -23,8 +23,8 @@ app.filter('color', function() {
     };
 });
 
-app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
-                        '$rootScope', function($scope, $http, $filter, $timeout, $rootScope) {
+app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
+                        '$rootScope', function($scope, $http, $filter, $timeout, $sce, $rootScope) {
     var allData;
     $scope.data = [];
     $scope.steps = [];
@@ -75,7 +75,10 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout',
     };
 
     $http.get('data/steps.tsv').then(function(response) {
-        $scope.steps = d3.tsv.parse(response.data);
+        $scope.steps = d3.tsv.parse(response.data, function(d) {
+            d.text = $sce.trustAsHtml(d.text);
+            return d;
+        });
 
         $http.get('data/data.csv').then(function(response) {
             allData = _(d3.csv.parse(response.data, function(d, i) {
