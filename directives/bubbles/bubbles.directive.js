@@ -39,7 +39,7 @@ angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($f
         var clusters = _(data).map(ƒ('cluster')).groupBy().map(function(d, k) {
             var item = {
                 name : k,
-                value : d.length / 4
+                value : d.length
             };
 
             return item;
@@ -103,15 +103,6 @@ angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($f
 
                 var bubbles = svg.selectAll('circle.bubble')
                                  .data(nodes, ƒ('id'));
-
-                // var clusters = svg.selectAll('circle.cluster').data(_.values(clusterCenters), ƒ('name'));
-                // clusters.enter()
-                //         .insert('circle.cluster', '.bubble')
-                //         .attr('fill', function(d) { return d3.rgb(colorFromString(d.name)).brighter(); });
-                // clusters.exit().remove();
-                // clusters.attr('r', ƒ('r'))
-                //         .attr('cx', ƒ('x'))
-                //         .attr('cy', ƒ('y'));
 
                 // Create new bubbles
                 bubbles.enter().append('circle.bubble')
