@@ -26,11 +26,9 @@ app.filter('color', function() {
 app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$location', '$rootScope',
                         function($scope, $http, $filter, $timeout, $sce, $location, $rootScope) {
     var colors = [
-        '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D',
-        '#334D5C', '#DFF2EF', '#4E7DA6', '#C42121',
-        '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758',
-        '#FFAD38', '#2C3E50', '#3E5101', '#839412',
-        '#BDC032', '#D9A404', '#D96704'
+        '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D', '#334D5C', '#DFF2EF', '#4E7DA6',
+        '#C42121', '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758', '#FFAD38', '#2C3E50',
+        '#3E5101', '#839412', '#BDC032', '#D9A404', '#D96704'
     ];
 
     var allData;
@@ -38,11 +36,12 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
     $scope.steps = [];
     $scope.currentStep = 0;
 
-    $scope.legend = 'La taille des bulles correspond à l’audience : plus elles sont grosse, plus le titre est important. C’est une sélection des principaux titres des groupes de presse répartis en fonction des actionnaires majoritaires.';
+    $scope.legend = 'La taille des bulles correspond à l’audience : plus elles sont grosse, plus ' +
+                    'le titre est important. C’est une sélection des principaux titres des ' +
+                    'groupes de presse répartis en fonction des actionnaires majoritaires.';
 
     $scope.switches = [
-        { label : 'En 2008' , value : '2008' },
-        { label : 'En 2015' , value : '2015' }
+        { label : 'En 2008' , value : '2008' }, { label : 'En 2015' , value : '2015' }
     ];
 
     $scope.isFirstStep = function() {
@@ -114,7 +113,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
             var groups = _(allData).pluck('2008').reject(_.isUndefined).uniq().value();
 
             _.each(allData, function(d) {
-                d.fill = colors[groups.indexOf(d['2008'])];
+                d.fill = colors[groups.indexOf(_.isUndefined(d['2008']) ? d['2015'] : d['2008'])];
             });
 
             var step = $location.search().step || 0;
