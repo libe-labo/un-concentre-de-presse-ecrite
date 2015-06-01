@@ -25,6 +25,14 @@ app.filter('color', function() {
 
 app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
                         '$rootScope', function($scope, $http, $filter, $timeout, $sce, $rootScope) {
+    var colors = [
+        '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D',
+        '#334D5C', '#DFF2EF', '#4E7DA6', '#C42121',
+        '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758',
+        '#FFAD38', '#2C3E50', '#3E5101', '#839412',
+        '#BDC032', '#D9A404', '#D96704'
+    ];
+
     var allData;
     $scope.data = [];
     $scope.steps = [];
@@ -93,14 +101,18 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
                 return out;
             })).groupBy('name').map(function(d) {
                 return _.merge(d[0], d[1], function(a, b, k) {
-                    if (k === 'r') {
-                        return a > b ? a : b;
-                    } else if (k === 'step') {
-                        return (a === b) ? a : (a == null || isNaN(a)) ? b : a;
+                    if (k === 'step') {
+                        return (a === b) ? a : (_.isUndefined(a) || isNaN(a)) ? b : a;
                     }
-                    return (a === b) ? a : (a == null) ? b : a;
+                    return (a === b) ? a : _.isUndefined(a) ? b : a;
                 });
-            }).each(function(d) { d.fill = $filter('color')(d['2008']); }).value();
+            }).value();
+
+            var groups = _(allData).pluck('2008').reject(_.isUndefined).uniq().value();
+
+            _.each(allData, function(d) {
+                d.fill = colors[groups.indexOf(d['2008'])];//$filter('color')(d['2008']);
+            });
 
             $scope.goToStep(0);
         });
