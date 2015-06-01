@@ -43,6 +43,7 @@
             <section class="content">
                 <div class="steps">
                     <div ng-repeat="step in steps" ng-if="currentStep === $index">
+                        <span class="date">{{ step.date }}</span>
                         <h2>{{ step.title }}</h2>
                         <p ng-bind-html="step.text"></p>
                     </div>

@@ -124,7 +124,7 @@ angular.module('app').directive('bubbles', ['$filter', '$rootScope', function($f
                 // Update existing bubbles
                 bubbles.attr('fill', ƒ('fill'))
                        .attr('stroke', function(d) {
-                            return d3.rgb(d.fill).darker(1.5);
+                            return d3.rgb(d.fill).darker(0.5);
                        }).each(function(d) {
                             // We're using Tipsy to show tooltips on mouseover
                             $(this).attr('original-title', d.name);

@@ -20,7 +20,7 @@ section.content {
 section.content h2 {
     font-family: "Trade Gothic Bold Cond";
     font-size: 3em;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
 }
 
 section.content p {
@@ -31,8 +31,14 @@ section.content p {
 
 section.content div.steps {
     width: 650px;
-    margin: 0 auto;
-    padding: 1px 25px 25px 25px;
+    margin: 0 auto 0;
+    padding: 10px 25px 25px 25px;
+}
+
+section.content div.steps span {
+    text-transform: uppercase;
+    color: #C42121;
+    font-family: "Trade Gothic Bold Cond";
 }
 
 section.content div.steps__navigation {
