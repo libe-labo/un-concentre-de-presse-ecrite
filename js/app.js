@@ -23,8 +23,8 @@ app.filter('color', function() {
     };
 });
 
-app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
-                        '$rootScope', function($scope, $http, $filter, $timeout, $sce, $rootScope) {
+app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$location', '$rootScope',
+                        function($scope, $http, $filter, $timeout, $sce, $location, $rootScope) {
     var colors = [
         '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D',
         '#334D5C', '#DFF2EF', '#4E7DA6', '#C42121',
@@ -56,6 +56,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
     $scope.goToStep = (function() {
         var timeout;
         return function(index) {
+            index = parseInt(index);
             if (index >= 0 && $scope.steps[index] != null) {
                 $timeout.cancel(timeout);
 
@@ -113,10 +114,11 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce',
             var groups = _(allData).pluck('2008').reject(_.isUndefined).uniq().value();
 
             _.each(allData, function(d) {
-                d.fill = colors[groups.indexOf(d['2008'])];//$filter('color')(d['2008']);
+                d.fill = colors[groups.indexOf(d['2008'])];
             });
 
-            $scope.goToStep(0);
+            var step = $location.search().step || 0;
+            $scope.goToStep(step);
         });
     });
 
