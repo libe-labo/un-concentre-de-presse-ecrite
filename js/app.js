@@ -28,7 +28,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
     var colors = [
         '#DF5A49', '#E27A3F', '#EFC94C', '#45B29D', '#334D5C', '#DFF2EF', '#4E7DA6',
         '#C42121', '#9E1D1D', '#6E1212', '#FF9D9D', '#FEE758', '#FFAD38', '#2C3E50',
-        '#3E5101', '#839412', '#BDC032', '#D9A404', '#D96704'
+        '#3E5101', '#839412', '#BDC032', '#D9A404', '#D96704', '#D9FFA8', '#F2EFCD'
     ];
 
     var allData;
