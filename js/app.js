@@ -71,7 +71,7 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
                     });
                     timeout = $timeout(function() {
                         $rootScope.$broadcast('bubbles:switchTo', '2015');
-                    }, 1500);
+                    }, 2500);
                 }
             }
         };
@@ -82,11 +82,16 @@ app.controller('Ctrl', ['$scope', '$http', '$filter', '$timeout', '$sce', '$loca
     };
 
     $scope.goToNextStep = function() {
-        $scope.goToStep($scope.currentStep + 1);
+        if ($scope.isLastStep()) {
+            $scope.goToStep(0);
+        } else {
+            $scope.goToStep($scope.currentStep + 1);
+        }
     };
 
     $http.get('data/steps.tsv').then(function(response) {
         $scope.steps = d3.tsv.parse(response.data, function(d) {
+            d.title = $sce.trustAsHtml(d.title);
             d.text = $sce.trustAsHtml(d.text);
             return d;
         });
