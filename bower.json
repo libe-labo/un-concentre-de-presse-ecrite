@@ -1,0 +1,19 @@
+{
+  "name": "french-media-groups",
+  "version": "0.0.0",
+  "homepage": "https://github.com/libedata/un-concentre-de-presse-ecrite",
+  "authors": [
+    "Paul Joannon <hello@pauljoannon.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3-jetpack": "*"
+  }
+}
